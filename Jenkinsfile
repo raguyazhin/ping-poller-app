@@ -5,15 +5,15 @@ pipeline {
     environment {
 
         DOCKER_REGISTRY = "raguyazhin"
-        DOCKER_IMAGE_NAME = "node-backend-app"
+        DOCKER_IMAGE_NAME = "ping-poller-api"
         DOCKER_IMAGE_TAG = "${BUILD_NUMBER}.0.0"
 
-        APP_GIT_REPO_URL = "https://github.com/raguyazhin/node-backend-app.git"
+        APP_GIT_REPO_URL = "https://github.com/raguyazhin/ping-poller-app.git"
         APP_GIT_REPO_BRANCH = "master"
 
-        KUBE_MANIFEST_GIT_REPO_URL = "https://github.com/raguyazhin/kube-manifest-node-backend-app.git"
+        KUBE_MANIFEST_GIT_REPO_URL = "https://github.com/raguyazhin/ping-poller-manifest.git"
         KUBE_MANIFEST_GIT_REPO_BRANCH = "master"
-        KUBE_MANIFEST_FILE = "node-backend-deployment.yaml"
+        KUBE_MANIFEST_FILE = "ping-poller-deploy.yaml"
 
         KUBECONFIG = "C:\\\\Users\\\\3100002\\\\.kube\\\\config"
 
@@ -49,16 +49,17 @@ pipeline {
             }
         }
 
+
         stage('Clone Kube Manifest repository') {
             steps {
                 checkout([
                     $class: 'GitSCM',
-                    branches: [[name: '*/master' ]],
-                    userRemoteConfigs: [[credentialsId: 'ragudockerhub', url: "${KUBE_MANIFEST_GIT_REPO_URL}"]],
+                    branches: [[name: "${KUBE_MANIFEST_GIT_REPO_BRANCH}"]],
+                    userRemoteConfigs: [[url: "${KUBE_MANIFEST_GIT_REPO_URL}"]],
                     extensions: [[$class: 'CloneOption', depth: 1, shallow: true]]
-                ])
+                ])    
             }
-        }  
+        }
 
         stage('switch to master branch') {
             steps {
@@ -66,7 +67,6 @@ pipeline {
             }
         }
 
-        // Plugin - Pipeline Utility Steps
         stage('Update image in kube manifest in local jenkins workspace') {
             steps {
                script {
@@ -87,22 +87,14 @@ pipeline {
 
         stage('Commit and push changes to kube manifest GitHub Repository') {
             steps {                                
-                withCredentials([string(credentialsId: 'ragudockerhubtoken', variable: 'GIT_TOKEN')]) {
-
-                    // git config user.email 'jenkins@example.com'
-                    // git config user.name 'Jenkins'
-                    //git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${KUBE_MANIFEST_GIT_REPO_URL} ${KUBE_MANIFEST_GIT_REPO_BRANCH}
-                    //git push origin HEAD:master
-                    //git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/raguyazhin/kube-manifest-node-backend-app.git HEAD:master
-                    //git push ${KUBE_MANIFEST_GIT_REPO_URL} HEAD:${KUBE_MANIFEST_GIT_REPO_BRANCH} -u ${GIT_TOKEN}
-                    //git push -u ${KUBE_MANIFEST_GIT_REPO_URL} HEAD:${KUBE_MANIFEST_GIT_REPO_BRANCH} ${GIT_TOKEN}
+                withCredentials([string(credentialsId: 'ragugithubtoken', variable: 'GIT_TOKEN')]) {
 
                     sh """    
                         git config user.email 'raguyazhin@gmail.com'
                         git config user.name 'Ragu Thangavel'            
                         git add .
                         git commit -m 'Update image (${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}) in Kube manifest' 
-                        git push https://${GIT_TOKEN}@github.com/raguyazhin/kube-manifest-node-backend-app.git                                                    
+                        git push https://${GIT_TOKEN}@github.com/raguyazhin/ping-poller-manifest.git                                                    
                     """
                 }
             }
