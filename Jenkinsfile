@@ -102,8 +102,8 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh "kubectl apply -f node-backend-deployment.yaml"
-                sh "kubectl apply -f node-backend-clusterip-svc.yaml"
+                sh "kubectl apply -f ping-poller-deploy.yaml"
+                sh "kubectl apply -f ping-poller-svc.yaml"
             }
         }
 
