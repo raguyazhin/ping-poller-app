@@ -51,40 +51,40 @@ pipeline {
         }
 
 
-        // stage('Clone Kube Manifest repository') {
-        //     steps {
-        //         checkout([
-        //             $class: 'GitSCM',
-        //             branches: [[name: "${KUBE_MANIFEST_GIT_REPO_BRANCH}"]],
-        //             userRemoteConfigs: [[url: "${KUBE_MANIFEST_GIT_REPO_URL}"]],
-        //             extensions: [[$class: 'CloneOption', depth: 1, shallow: true]]
-        //         ])    
-        //     }
-        // }
+        stage('Clone Kube Manifest repository') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: "${KUBE_MANIFEST_GIT_REPO_BRANCH}"]],
+                    userRemoteConfigs: [[url: "${KUBE_MANIFEST_GIT_REPO_URL}"]],
+                    extensions: [[$class: 'CloneOption', depth: 1, shallow: true]]
+                ])    
+            }
+        }
 
-        // stage('switch to master branch') {
-        //     steps {
-        //         sh "git checkout master"
-        //     }
-        // }
+        stage('switch to master branch') {
+            steps {
+                sh "git checkout master"
+            }
+        }
 
-        // stage('Update image in kube manifest in local jenkins workspace') {
-        //     steps {
-        //        script {
+        stage('Update image in kube manifest in local jenkins workspace') {
+            steps {
+               script {
 
-        //             // def workspacePath = env.WORKSPACE.replace(File.separator, "\\\\")
-        //             // def yaml = readYaml(file: "${workspacePath}\\\\${KUBE_MANIFEST_FILE}")
-        //             // sh "echo ${yaml}"
-        //             // yaml.spec.template.spec.containers[0].image = "${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
-        //             // writeYaml(file: "${workspacePath}\\\\${KUBE_MANIFEST_FILE}", data: yaml, overwrite: true )
+                    // def workspacePath = env.WORKSPACE.replace(File.separator, "\\\\")
+                    // def yaml = readYaml(file: "${workspacePath}\\\\${KUBE_MANIFEST_FILE}")
+                    // sh "echo ${yaml}"
+                    // yaml.spec.template.spec.containers[0].image = "${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+                    // writeYaml(file: "${workspacePath}\\\\${KUBE_MANIFEST_FILE}", data: yaml, overwrite: true )
                    
-        //             def yaml = readYaml(file: "${KUBE_MANIFEST_FILE}")
-        //             yaml.spec.template.spec.containers[0].image = "${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
-        //             writeYaml(file: "${KUBE_MANIFEST_FILE}", data: yaml, overwrite: true )
+                    def yaml = readYaml(file: "${KUBE_MANIFEST_FILE}")
+                    yaml.spec.template.spec.containers[0].image = "${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
+                    writeYaml(file: "${KUBE_MANIFEST_FILE}", data: yaml, overwrite: true )
 
-        //         }
-        //     }
-        // }   
+                }
+            }
+        }   
 
         // stage('Commit and push changes to kube manifest GitHub Repository') {
         //     steps {                                
