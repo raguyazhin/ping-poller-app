@@ -101,12 +101,12 @@ pipeline {
             }
         }
 
-        // stage('Deploy to Kubernetes') {
-        //     steps {
-        //         sh "kubectl apply -f ping-poller-deploy.yaml"
-        //         sh "kubectl apply -f ping-poller-svc.yaml"
-        //     }
-        // }
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh "kubectl apply -f ping-poller-deploy.yaml"
+                sh "kubectl apply -f ping-poller-svc.yaml"
+            }
+        }
 
     }
 }
