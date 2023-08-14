@@ -86,20 +86,20 @@ pipeline {
             }
         }   
 
-        // stage('Commit and push changes to kube manifest GitHub Repository') {
-        //     steps {                                
-        //         withCredentials([string(credentialsId: 'ragugithubtoken', variable: 'GIT_TOKEN')]) {
+        stage('Commit and push changes to kube manifest GitHub Repository') {
+            steps {                                
+                withCredentials([string(credentialsId: 'ragugithubtoken', variable: 'GIT_TOKEN')]) {
 
-        //             sh """    
-        //                 git config user.email 'raguyazhin@gmail.com'
-        //                 git config user.name 'Ragu Thangavel'            
-        //                 git add .
-        //                 git commit -m 'Update image (${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}) in Kube manifest' 
-        //                 git push https://${GIT_TOKEN}@github.com/raguyazhin/ping-poller-manifest.git                                                    
-        //             """
-        //         }
-        //     }
-        // }
+                    sh """    
+                        git config user.email 'raguyazhin@gmail.com'
+                        git config user.name 'Ragu Thangavel'            
+                        git add .
+                        git commit -m 'Update image (${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}) in Kube manifest' 
+                        git push https://${GIT_TOKEN}@github.com/raguyazhin/ping-poller-manifest.git                                                    
+                    """
+                }
+            }
+        }
 
         // stage('Deploy to Kubernetes') {
         //     steps {
