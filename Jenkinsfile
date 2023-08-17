@@ -8,6 +8,7 @@ pipeline {
         DOCKER_IMAGE_NAME = "ping-poller-api"
         DOCKER_IMAGE_TAG = "${BUILD_NUMBER}.0.0"
 
+
         APP_GIT_REPO_URL = "https://github.com/raguyazhin/ping-poller-app.git"
         APP_GIT_REPO_BRANCH = "master"
 
@@ -40,13 +41,14 @@ pipeline {
                 }
             }
         }
-
+    
         stage('Push Docker image') {
+
             steps {
-                withCredentials([usernamePassword(credentialsId: 'ragudockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {                
+                withCredentials([usernamePassword(credentialsId: 'ragudockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
                     sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}"
-                }
+                }                
             }
         }
 
