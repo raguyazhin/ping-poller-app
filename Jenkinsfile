@@ -22,6 +22,9 @@ pipeline {
         SONAR_SOURCES = '.'
         SONAR_HOST_URL = 'http://localhost:9000'
         SONAR_TOKEN = credentials('sonarqubetoken') 
+
+        SCANNER_HOME_PATH = 'C:\\\\sonar-scanner'
+
     }
 
     stages {
@@ -42,7 +45,7 @@ pipeline {
                 script {
                     //def scannerHome = tool name: 'SonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                     withSonarQubeEnv('SonarQube') {
-                        sh "sonar-scanner.bat -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${SONAR_SOURCES} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN}"                            
+                        sh "${SCANNER_HOME_PATH}/bin/sonar-scanner.bat -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${SONAR_SOURCES} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN}"                            
                     }
                 }
             }
