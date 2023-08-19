@@ -11,10 +11,6 @@ hostName = socket.gethostname()
 def ping_ip(ip):
 
     try:
-
-        ip_address = ipaddress.ip_address(ip)
-        print(ip_address)
-        
         status = subprocess.call(['ping', '-c', '5', str(ip)],)
         if status == 0:
             return "1"
