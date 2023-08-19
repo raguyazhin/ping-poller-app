@@ -18,8 +18,10 @@ pipeline {
 
         KUBECONFIG = "C:\\\\Users\\\\3100002\\\\.kube\\\\config"
 
-        SONAR_TOKEN_CREDENTIALS = credentials('sonarqubetoken')
-
+        SONAR_PROJECT_KEY = 'ping-poller'
+        SONAR_SOURCES = '.'
+        SONAR_HOST_URL = 'http://localhost:9000'
+        SONAR_TOKEN = credentials('sonarqubetoken') 
     }
 
     stages {
@@ -40,9 +42,7 @@ pipeline {
                 script {
                     //def scannerHome = tool name: 'SonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                     withSonarQubeEnv('SonarQube') {
-                        withCredentials([string(credentialsId: 'sonarqubetoken', variable: 'SONAR_TOKEN')]) {
-                            //sh "${scannerHome}/bin/sonar-scanner -Dsonar.login=${SONAR_TOKEN}"
-                        }
+                        sh "sonar-scanner.bat -Dsonar.projectKey=${SONAR_PROJECT_KEY} -Dsonar.sources=${SONAR_SOURCES} -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN}"                            
                     }
                 }
             }
